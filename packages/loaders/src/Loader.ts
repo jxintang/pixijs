@@ -1,5 +1,6 @@
 import { Loader as ResourceLoader, middleware } from 'resource-loader';
 import { TextureLoader } from './TextureLoader';
+import { SliceLoader } from './SliceLoader';
 
 import type { Resource } from 'resource-loader';
 import type { ILoaderResource } from './LoaderResource';
@@ -66,6 +67,22 @@ export class Loader extends ResourceLoader
     private static _plugins: Array<ILoaderPlugin> = [];
     private static _shared: Loader;
     private _protected: boolean;
+
+    /**
+     * The start of sliced data
+     *
+     * @member {number}
+     * @default 0
+     */
+    start: number;
+
+    /**
+     * The end of sliced data
+     *
+     * @member {number}
+     * @default 0
+     */
+    end: number;
 
     /** All the resources for this loader by name. */
     public readonly resources: {[name: string]: ILoaderResource};
@@ -160,6 +177,9 @@ export class Loader extends ResourceLoader
         return Loader;
     }
 }
+
+// sliced audio buffer if start/end passed
+Loader.registerPlugin(SliceLoader);
 
 // parse any blob into more usable objects (e.g. Image)
 Loader.registerPlugin({ use: middleware.parsing });
